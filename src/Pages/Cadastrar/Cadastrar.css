@@ -1,0 +1,35 @@
+.container-cadastrar{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 60%;
+    height: 60vh;
+    margin: 0 auto;
+}
+.container-input{
+    width: 100%;
+}
+.container-email{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.container-password{
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+}
+.btn, .btn-cadastrar{
+    margin-top: 15px;
+    width: 35%;
+    height: 2em;
+}
+.btn .btn-cadastrar:hover{
+    transition: all .5s;
+    transform: scale(1.1);
+    cursor: pointer;
+}
+input{
+    height: 1.5em;
+    font-size: 1.2em;
+}
