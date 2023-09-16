@@ -1,12 +1,13 @@
 import React,{useState,useEffect,useContext} from 'react'
 import { UserContext } from '../../context/UserContext'
 import { auth,db} from '../../FireBase/FireBase'
-import { collection, addDoc } from "firebase/firestore"; 
+import { collection, addDoc,getDocs } from "firebase/firestore"; 
 import { toast } from 'react-toastify';
 
 const Carteira = () => {
     const {user,setUser}=useContext(UserContext)
     const userUID=user?user.uid:"";
+    const [dadoRepetido,setDadoRepetido]=useState("")
 
     const [nome,setNome]=useState("")
     const [cpf,setCPF]=useState("")
@@ -19,7 +20,20 @@ const Carteira = () => {
     const [cidade,setCidade]=useState("")
     const [UID,setUID]=useState("")
 
-   
+
+    useEffect(()=>{
+        async function attdados(){
+            const querySnapshot =  await getDocs(collection(db,"dadosCarteira"));
+            querySnapshot.forEach((doc) => {
+                setDadoRepetido(doc.data().UID);
+            })
+        }
+        console.log("dados",dadoRepetido)
+        attdados()
+        
+    },[])
+
+    
     async function handleGerar(){
         if (!nome || !cpf || !rg || !dataNascimento || !curso || !instituicao || !matricula || !nivelEnsino || !cidade || !user?.uid) {
             toast.error('Por favor, preencha todos os campos', {
@@ -33,6 +47,21 @@ const Carteira = () => {
                 theme: "dark",
             });
             return;
+        }
+        
+        
+        if (userUID===dadoRepetido){ 
+            toast.error("Documento ja existente!", {
+                position: "top-center",
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "dark",
+                });
+            return
         }
     
         await addDoc(collection(db,"dadosCarteira"),{

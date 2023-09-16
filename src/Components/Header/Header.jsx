@@ -29,7 +29,8 @@ const Header = () => {
     }
   return (
     <div className='container-header'>
-        <h2>Carteira de Estudante</h2>
+      <Link  className='link-home' to={"/"}><h2>Carteira de Estudante</h2></Link>
+        
         <div className='container-link'>
             {user?(<button className='btn btn-sair' onClick={()=>handlesair()}>sair</button>):(<Link to={"/login"}>Login</Link>)}
             {user?(<Link to={"/carteira"}>Carteira</Link>):(<Link to={"/cadastrar"}>Cadastrar</Link>)}

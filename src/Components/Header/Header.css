@@ -38,3 +38,13 @@ a:hover{
 .btn-sair {
     margin: 0px;
 }
+.link-home{
+    text-decoration: none;
+    color:white
+}
+.link-home:hover{
+    transform: scale(1);
+    transition: all .5s;
+    color: white;
+    cursor: pointer;
+}
