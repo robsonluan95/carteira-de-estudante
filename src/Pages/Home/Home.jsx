@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import "./Home.css"
 import { useContext } from 'react'
 import { UserContext } from '../../context/UserContext'
 import { collection, getDocs } from 'firebase/firestore'
@@ -55,16 +56,49 @@ const Home = () => {
     <div>
        {user?(
         <>
-          <div>
-            <h1>{dadosUser.nome}</h1>
-            <h1>{dadosUser.cpf}</h1>
-            <h1>{dadosUser.rg}</h1>
-            <h1>{dadosUser.dataNascimento}</h1>
-            <h1>{dadosUser.curso}</h1>
-            <h1>{dadosUser.instituicao}</h1>
-            <h1>{dadosUser.matricula}</h1>
-            <h1>{dadosUser.nivelEnsino}</h1>
-            <h1>{dadosUser.cidade}</h1>
+          <div className='container-card'>
+            <div className='container-DNR'>
+              <h1>DNE</h1>
+              <span>Documento Nacional do Estudante</span>
+              <img src='https://www.ufpb.br/cpa/contents/noticias/a-cpa-comissao-propria-de-avaliacao-informa-que-ja-enviou-seu-relatorio-de-gestao-do-ano-de-2017-a-cpme/mec.png/@@images/bd00b145-32db-4493-8b65-fa13595b92e4.png'/>
+            </div>
+
+            <div className='container-dados'>
+              <div className='container-foto'> 
+                    <h1></h1>
+              </div>
+              <div className='container-estudante'>
+                <h1>Dados do Estudante :</h1>
+                <div className='container-dados-estudante'>
+                  <h3>Nome: {dadosUser.nome}</h3>
+                  <h3>CPF: {dadosUser.cpf}</h3>
+                  <h3>RG: {dadosUser.rg}</h3>
+                  <h3>Data de nascimento: {dadosUser.dataNascimento}</h3>
+                </div>
+              </div>
+              
+              <div className='container-escola'>
+                <h3>Curso: {dadosUser.curso}</h3>
+                <h3>Instituicao: {dadosUser.instituicao}</h3>
+                <h3>Matricula: {dadosUser.matricula}</h3>
+                <h3>Nivel de Ensino: {dadosUser.nivelEnsino}</h3>
+                <h3>Cidade: {dadosUser.cidade}</h3>
+              </div>
+            </div>
+            
+            <div className='container-codigos'>
+              <div >
+                <img src='https://png.pngtree.com/png-clipart/20220605/original/pngtree-black-qr-code-for-web-png-image_7964376.png'/>
+              </div>
+              <div className='container-codigo-uso'>
+                <span>Codigo de uso:</span>
+                <span>Documento Nacional do Estudante</span>
+              </div>
+              <div>
+                <h1 className='Ano'>2023</h1>
+              </div>
+            </div>
+            
           </div>
         </>
        ):(<p>Loading...</p>)}
