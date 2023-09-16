@@ -49,7 +49,7 @@ const Home = () => {
         });
       }
       buscarDados()
-    },[])
+    },[user])
     
   return (
    
@@ -70,19 +70,19 @@ const Home = () => {
               <div className='container-estudante'>
                 <h1>Dados do Estudante :</h1>
                 <div className='container-dados-estudante'>
-                  <h3>Nome: {dadosUser.nome}</h3>
-                  <h3>CPF: {dadosUser.cpf}</h3>
-                  <h3>RG: {dadosUser.rg}</h3>
-                  <h3>Data de nascimento: {dadosUser.dataNascimento}</h3>
+                  <h4>Nome: {dadosUser.nome}</h4>
+                  <h4>CPF: {dadosUser.cpf}</h4>
+                  <h4>RG: {dadosUser.rg}</h4>
+                  <h4>Data de nascimento: {dadosUser.dataNascimento}</h4>
                 </div>
               </div>
               
               <div className='container-escola'>
-                <h3>Curso: {dadosUser.curso}</h3>
-                <h3>Instituicao: {dadosUser.instituicao}</h3>
-                <h3>Matricula: {dadosUser.matricula}</h3>
-                <h3>Nivel de Ensino: {dadosUser.nivelEnsino}</h3>
-                <h3>Cidade: {dadosUser.cidade}</h3>
+                <h4>Curso: {dadosUser.curso}</h4>
+                <h4>Instituicao: {dadosUser.instituicao}</h4>
+                <h4>Matricula: {dadosUser.matricula}</h4>
+                <h4>Nivel de Ensino: {dadosUser.nivelEnsino}</h4>
+                <h4>Cidade: {dadosUser.cidade}</h4>
               </div>
             </div>
             
@@ -92,7 +92,7 @@ const Home = () => {
               </div>
               <div className='container-codigo-uso'>
                 <span>Codigo de uso:</span>
-                <span>Documento Nacional do Estudante</span>
+                <span>8000551654896</span>
               </div>
               <div>
                 <h1 className='Ano'>2023</h1>
