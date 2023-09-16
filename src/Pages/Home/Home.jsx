@@ -2,11 +2,16 @@ import React from 'react'
 import { useContext } from 'react'
 import { UserContext } from '../../context/UserContext'
 const Home = () => {
-    const {user}=useContext(UserContext)
+    const {user,setUser,userDetails,setUserDetails}=useContext(UserContext)
+    console.log(user)
   return (
-
+    
     <div>
-       <h1>{user}</h1> 
+       {user&&(
+        <>
+        <h1>{`Welcome ${user.email}`}</h1><br/>
+        </>
+       )}
     </div>
   )
 }

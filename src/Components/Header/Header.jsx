@@ -3,27 +3,30 @@ import "./Header.css"
 import { Link } from 'react-router-dom'
 import { UserContext } from '../../context/UserContext'
 import { toast} from 'react-toastify'
+import { signOut } from 'firebase/auth'
+import { auth } from '../../FireBase/FireBase'
 
 
 
 
 const Header = () => {
-    const {user,setUser}=useContext(UserContext)
+    const {user,setUser,userDetails,setUserDetails}=useContext(UserContext)
     async function handlesair(){
-        toast.success('Usuário desconectado', {
-            position: "top-center",
-            autoClose: 2000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-            });
-            setUser(false)
+      await signOut(auth)
+      toast.success('Usuário desconectado', {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "dark",
+      });
+      setUser()
+      setUserDetails({})            
         
     }
-    console.log(user)
   return (
     <div className='container-header'>
         <h2>Carteira de Estudante</h2>

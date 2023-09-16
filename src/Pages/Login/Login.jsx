@@ -1,19 +1,23 @@
-import React,{useContext,useState} from 'react'
+import React,{useContext,useEffect,useState} from 'react'
 import "./Login.css"
 import { toast } from 'react-toastify';
 import { UserContext } from '../../context/UserContext'
 import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../FireBase/FireBase';
 
 const Login = () => {
     const {user,setUser}=useContext(UserContext)
+
     const [email,setEmail]=useState("")
     const [password,setPassword]=useState("")
+
     const navigator= useNavigate()
+    
     async function handleEntrar(){
         await signInWithEmailAndPassword(auth,email,password)
-        .then(()=>{
+        .then((value)=>{
+            console.log(value.user)
             toast.success('Usuário conctado', {
                 position: "top-center",
                 autoClose: 2000,
@@ -53,6 +57,18 @@ const Login = () => {
                     theme: "dark",
                 });
                 setUser(false)
+            }else if (error.code==="auth/missing-password"){
+                toast.warn(`Esqueceu de inserir a senha!`, {
+                    position: "top-center",
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "dark",
+                });
+                setUser(false)
             }else{
                 toast.warn(`Error`, {
                     position: "top-center",
@@ -70,7 +86,7 @@ const Login = () => {
         })
         
     }
-  return (
+  return ( 
     <div className='container-login'>
         <h1>Login</h1>
         <div className='container-input'>
