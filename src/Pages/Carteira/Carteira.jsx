@@ -28,14 +28,13 @@ const Carteira = () => {
                 setDadoRepetido(doc.data().UID);
             })
         }
-        console.log("dados",dadoRepetido)
         attdados()
         
     },[])
 
     
     async function handleGerar(){
-        if (!nome || !cpf || !rg || !dataNascimento || !curso || !instituicao || !matricula || !nivelEnsino || !cidade || !user?.uid) {
+        if (!nome || !cpf || !rg || !dataNascimento || !curso || !instituicao || !matricula || !nivelEnsino || !cidade ) {
             toast.error('Por favor, preencha todos os campos', {
                 position: "top-center",
                 autoClose: 2000,
