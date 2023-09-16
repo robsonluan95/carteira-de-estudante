@@ -31,7 +31,7 @@ const Header = () => {
     <div className='container-header'>
         <h2>Carteira de Estudante</h2>
         <div className='container-link'>
-            {user?(<button className='btn btn btn-sair' onClick={()=>handlesair()}>sair</button>):(<Link to={"/login"}>Login</Link>)}
+            {user?(<button className='btn btn-sair' onClick={()=>handlesair()}>sair</button>):(<Link to={"/login"}>Login</Link>)}
             {user?(<Link to={"/carteira"}>Carteira</Link>):(<Link to={"/cadastrar"}>Cadastrar</Link>)}
             
         </div>
