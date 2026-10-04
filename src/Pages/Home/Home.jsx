@@ -9,7 +9,6 @@ import { toast } from 'react-toastify'
 const Home = () => {
     const {user,loading}=useContext(UserContext)
     const [dadosUser,setDadosUser]=useState({})
-    const [recarregando,setRecarregando]=useState(false)
     const userUID=user?user.uid:""
     
     useEffect(()=>{
@@ -50,12 +49,6 @@ const Home = () => {
       return `${dia}/${mes}/${ano}`
     }
 
-    // Botão apenas ilustrativo (exemplo de aula): gira o ícone e não recarrega nada
-    function handleRecarregarFoto(){
-      setRecarregando(true)
-      setTimeout(()=>setRecarregando(false),1000)
-    }
-
     if (loading) return <p className='carregando'>Carregando...</p>
     if (!user) return <Navigate to="/login" replace/>
 
@@ -72,9 +65,6 @@ const Home = () => {
       <div className='carteira-corpo'>
         <div className='carteira-foto'>
           <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.4 0-8 2.2-8 5v2h16v-2c0-2.8-3.6-5-8-5Z'/></svg>
-          <button type='button' className={recarregando?'btn-recarregar girando':'btn-recarregar'} onClick={handleRecarregarFoto} aria-label='Recarregar foto' title='Recarregar foto'>
-            <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M17.65 6.35A7.95 7.95 0 0 0 12 4a8 8 0 1 0 7.75 10h-2.08A6 6 0 1 1 12 6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35Z'/></svg>
-          </button>
         </div>
 
         <dl className='carteira-dados'>
@@ -89,8 +79,6 @@ const Home = () => {
         </dl>
       </div>
 
-      <div className='carteira-marca-dagua' aria-hidden='true'>MODELO – SEM VALIDADE</div>
-      <p className='carteira-aviso'>Modelo para fins didáticos – sem validade como documento.</p>
     </div>
   )
 }
