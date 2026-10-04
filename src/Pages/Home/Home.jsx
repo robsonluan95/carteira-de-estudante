@@ -33,6 +33,7 @@ const Home = () => {
             matricula:dados.matricula,
             nivelEnsino:dados.nivelEnsino,
             cidade:dados.cidade,
+            foto:dados.foto,
             UID:dados.UID,
           })
         }catch(error){
@@ -64,7 +65,7 @@ const Home = () => {
 
       <div className='carteira-corpo'>
         <div className='carteira-foto'>
-          <svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.4 0-8 2.2-8 5v2h16v-2c0-2.8-3.6-5-8-5Z'/></svg>
+          {dadosUser.foto?<img src={dadosUser.foto} alt='Foto do estudante'/>:<svg viewBox='0 0 24 24' aria-hidden='true'><path d='M12 12a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9Zm0 2c-4.4 0-8 2.2-8 5v2h16v-2c0-2.8-3.6-5-8-5Z'/></svg>}
         </div>
 
         <dl className='carteira-dados'>

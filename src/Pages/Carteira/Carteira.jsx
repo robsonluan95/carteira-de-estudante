@@ -2,13 +2,16 @@ import {useState,useEffect,useContext} from 'react'
 import { Navigate } from 'react-router-dom'
 import { UserContext } from '../../context/UserContext'
 import { db} from '../../FireBase/FireBase'
-import { collection, addDoc,getDocs,query,where } from "firebase/firestore"; 
+import { collection, addDoc,getDocs,query,where,updateDoc } from "firebase/firestore"; 
 import { toast } from 'react-toastify';
+import { reduzirFoto } from '../../utils/foto';
 
 const Carteira = () => {
     const {user,loading}=useContext(UserContext)
     const userUID=user?user.uid:"";
     const [jaCadastrado,setJaCadastrado]=useState(false)
+    const [docRef,setDocRef]=useState(null)
+    const [foto,setFoto]=useState("")
 
     const [nome,setNome]=useState("")
     const [cpf,setCPF]=useState("")
@@ -28,6 +31,10 @@ const Carteira = () => {
                 const q=query(collection(db,"dadosCarteira"),where("UID","==",userUID))
                 const querySnapshot =  await getDocs(q);
                 setJaCadastrado(!querySnapshot.empty)
+                if (!querySnapshot.empty){
+                    setDocRef(querySnapshot.docs[0].ref)
+                    setFoto(querySnapshot.docs[0].data().foto||"")
+                }
             }catch(error){
                 console.error(error)
             }
@@ -36,6 +43,31 @@ const Carteira = () => {
     },[userUID])
 
     
+    async function handleFoto(e){
+        const arquivo=e.target.files[0]
+        if (!arquivo) return
+        try{
+            setFoto(await reduzirFoto(arquivo))
+        }catch(error){
+            toast.error(error.message)
+        }
+        e.target.value=""
+    }
+
+    async function handleSalvarFoto(){
+        if (!foto){
+            toast.error('Escolha uma foto primeiro')
+            return
+        }
+        try{
+            await updateDoc(docRef,{foto})
+            toast.success('Foto atualizada com Sucesso')
+        }catch(error){
+            console.error(error)
+            toast.error(`Erro ao salvar a foto: ${error.message}`)
+        }
+    }
+
     async function handleGerar(){
         if (!nome || !cpf || !rg || !dataNascimento || !curso || !instituicao || !matricula || !nivelEnsino || !cidade ) {
             toast.error('Por favor, preencha todos os campos');
@@ -48,7 +80,7 @@ const Carteira = () => {
         }
     
         try{
-            await addDoc(collection(db,"dadosCarteira"),{
+            const novoDoc=await addDoc(collection(db,"dadosCarteira"),{
                 nome,
                 cpf,
                 rg,
@@ -58,8 +90,10 @@ const Carteira = () => {
                 matricula,
                 nivelEnsino,
                 cidade,
+                foto,
                 UID:userUID
             })
+            setDocRef(novoDoc)
             toast.success('Carteira cadastrada com Sucesso');
             setJaCadastrado(true)
             setNome("")
@@ -80,10 +114,32 @@ const Carteira = () => {
     if (loading) return <p className='carregando'>Carregando...</p>
     if (!user) return <Navigate to="/login" replace/>
 
+    if (jaCadastrado) return (
+    <div className='form-card'>
+            <h1>Foto da carteira</h1>
+            <p className='subtitulo'>Sua carteira já foi gerada. Aqui você pode trocar a foto.</p>
+            <div className='campo-foto'>
+                <div className='preview-foto'>
+                    {foto?<img src={foto} alt='Foto do estudante'/>:<span>Sem foto</span>}
+                </div>
+                <label className='btn btn-secundario' htmlFor='foto'>Escolher foto</label>
+                <input id='foto' type='file' accept='image/*' onChange={handleFoto} hidden/>
+            </div>
+            <button type='button' className='btn' onClick={handleSalvarFoto}>Salvar foto</button>
+    </div>
+    )
+
   return (
     <form className='form-card form-card-largo' onSubmit={(e)=>{e.preventDefault();handleGerar()}}>
             <h1>Dados da carteira</h1>
             <p className='subtitulo'>Preencha seus dados para gerar a carteira</p>
+            <div className='campo-foto'>
+                <div className='preview-foto'>
+                    {foto?<img src={foto} alt='Foto do estudante'/>:<span>Sem foto</span>}
+                </div>
+                <label className='btn btn-secundario' htmlFor='foto'>Escolher foto</label>
+                <input id='foto' type='file' accept='image/*' onChange={handleFoto} hidden/>
+            </div>
             <div className='form-grid'>
                 <div className='campo'>
                     <label htmlFor='nome'>Nome Completo</label>
