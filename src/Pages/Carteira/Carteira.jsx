@@ -4,7 +4,7 @@ import { UserContext } from '../../context/UserContext'
 import { db} from '../../FireBase/FireBase'
 import { collection, addDoc,getDocs,query,where,updateDoc } from "firebase/firestore"; 
 import { toast } from 'react-toastify';
-import { reduzirFoto } from '../../utils/foto';
+import CentralizarFoto from '../../Components/CentralizarFoto/CentralizarFoto';
 
 const Carteira = () => {
     const {user,loading}=useContext(UserContext)
@@ -13,6 +13,7 @@ const Carteira = () => {
     const [jaCadastrado,setJaCadastrado]=useState(false)
     const [docRef,setDocRef]=useState(null)
     const [foto,setFoto]=useState("")
+    const [fotoEscolhida,setFotoEscolhida]=useState("")
 
     const [nome,setNome]=useState("")
     const [cpf,setCPF]=useState("")
@@ -44,16 +45,29 @@ const Carteira = () => {
     },[userUID])
 
     
-    async function handleFoto(e){
+    function handleFoto(e){
         const arquivo=e.target.files[0]
-        if (!arquivo) return
-        try{
-            setFoto(await reduzirFoto(arquivo))
-        }catch(error){
-            toast.error(error.message)
-        }
         e.target.value=""
+        if (!arquivo) return
+        if (!arquivo.type.startsWith("image/")){
+            toast.error("O arquivo precisa ser uma imagem")
+            return
+        }
+        setFotoEscolhida(URL.createObjectURL(arquivo))
     }
+
+    function fecharCentralizador(){
+        URL.revokeObjectURL(fotoEscolhida)
+        setFotoEscolhida("")
+    }
+
+    const centralizador=fotoEscolhida&&(
+        <CentralizarFoto
+            src={fotoEscolhida}
+            onConfirmar={(novaFoto)=>{setFoto(novaFoto);fecharCentralizador()}}
+            onCancelar={fecharCentralizador}
+        />
+    )
 
     async function handleSalvarFoto(){
         if (!foto){
@@ -130,6 +144,7 @@ const Carteira = () => {
             </div>
             <button type='button' className='btn' onClick={handleSalvarFoto}>Salvar foto</button>
             <button type='button' className='btn btn-secundario' onClick={()=>navigate("/")}>Ver minha carteira</button>
+            {centralizador}
     </div>
     )
 
@@ -187,6 +202,7 @@ const Carteira = () => {
                 </div>
             </div>
             <button type='submit' className='btn'>Gerar carteira</button>
+            {centralizador}
     </form>
   )
 }

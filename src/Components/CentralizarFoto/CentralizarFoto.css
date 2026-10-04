@@ -1,0 +1,72 @@
+.centralizar-fundo {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+  background: rgba(15, 23, 42, 0.6);
+}
+.centralizar-janela {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 340px;
+  padding: 1.5rem;
+  background: var(--cor-superficie);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+}
+.centralizar-janela h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: var(--cor-primaria-escura);
+}
+.centralizar-janela .subtitulo {
+  margin: 0;
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--cor-texto-suave);
+}
+.centralizar-area {
+  position: relative;
+  flex-shrink: 0;
+  overflow: hidden;
+  background: var(--cor-fundo);
+  border-radius: 12px;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.centralizar-area:active {
+  cursor: grabbing;
+}
+.centralizar-area > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  max-width: none;
+  pointer-events: none;
+}
+.centralizar-zoom {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+}
+.centralizar-zoom input {
+  flex: 1;
+}
+.centralizar-botoes {
+  display: flex;
+  gap: 0.75rem;
+  width: 100%;
+}
+.centralizar-botoes .btn {
+  flex: 1;
+}
