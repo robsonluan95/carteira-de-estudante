@@ -89,7 +89,7 @@ const Home = () => {
                 <span>8000551654896</span>
               </div>
               <div>
-                <h1 className='Ano'>{new Date().getFullYear()}</h1>
+                <h1 className='Ano'>{new Date().toLocaleDateString('pt-BR')}</h1>
               </div>
             </div>
             
