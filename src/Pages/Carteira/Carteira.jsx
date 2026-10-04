@@ -1,5 +1,5 @@
 import {useState,useEffect,useContext} from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../context/UserContext'
 import { db} from '../../FireBase/FireBase'
 import { collection, addDoc,getDocs,query,where,updateDoc } from "firebase/firestore"; 
@@ -9,6 +9,7 @@ import { reduzirFoto } from '../../utils/foto';
 const Carteira = () => {
     const {user,loading}=useContext(UserContext)
     const userUID=user?user.uid:"";
+    const navigate=useNavigate()
     const [jaCadastrado,setJaCadastrado]=useState(false)
     const [docRef,setDocRef]=useState(null)
     const [foto,setFoto]=useState("")
@@ -62,6 +63,7 @@ const Carteira = () => {
         try{
             await updateDoc(docRef,{foto})
             toast.success('Foto atualizada com Sucesso')
+            navigate("/")
         }catch(error){
             console.error(error)
             toast.error(`Erro ao salvar a foto: ${error.message}`)
@@ -95,6 +97,7 @@ const Carteira = () => {
             })
             setDocRef(novoDoc)
             toast.success('Carteira cadastrada com Sucesso');
+            navigate("/")
             setJaCadastrado(true)
             setNome("")
             setCPF("")
@@ -126,6 +129,7 @@ const Carteira = () => {
                 <input id='foto' type='file' accept='image/*' onChange={handleFoto} hidden/>
             </div>
             <button type='button' className='btn' onClick={handleSalvarFoto}>Salvar foto</button>
+            <button type='button' className='btn btn-secundario' onClick={()=>navigate("/")}>Ver minha carteira</button>
     </div>
     )
 

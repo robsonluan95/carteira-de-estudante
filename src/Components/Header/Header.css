@@ -43,6 +43,9 @@
   border-radius: 10px;
   transition: background .2s;
 }
+.container-link a.active {
+  background: rgba(55, 48, 163, 0.12);
+}
 .container-link a:hover {
   background: rgba(55, 48, 163, 0.08);
 }
@@ -53,5 +56,15 @@
 @media (max-width: 600px) {
   .link-home h2 {
     display: none;
+  }
+  .container-link {
+    gap: 0.25rem;
+  }
+  .container-link a {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.9rem;
+  }
+  .container-link .btn {
+    padding: 0 0.75rem;
   }
 }

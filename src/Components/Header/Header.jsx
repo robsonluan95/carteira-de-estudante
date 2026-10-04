@@ -1,6 +1,6 @@
 import {useContext} from 'react'
 import "./Header.css"
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, NavLink, useNavigate } from 'react-router-dom'
 import { UserContext } from '../../context/UserContext'
 import { toast} from 'react-toastify'
 import { signOut } from 'firebase/auth'
@@ -27,8 +27,18 @@ const Header = () => {
       <Link  className='link-home' to={"/"}><span className='logo'>CE</span><h2>Carteira de Estudante</h2></Link>
         
         <div className='container-link'>
-            {user?(<button className='btn btn-secundario' onClick={()=>handlesair()}>Sair</button>):(<Link to={"/login"}>Login</Link>)}
-            {user?(<Link to={"/carteira"}>Carteira</Link>):(<Link to={"/cadastrar"}>Cadastrar</Link>)}
+            {user?(
+              <>
+                <NavLink to={"/"} end>Minha carteira</NavLink>
+                <NavLink to={"/carteira"}>Meus dados</NavLink>
+                <button className='btn btn-secundario' onClick={()=>handlesair()}>Sair</button>
+              </>
+            ):(
+              <>
+                <NavLink to={"/login"}>Login</NavLink>
+                <NavLink to={"/cadastrar"}>Cadastrar</NavLink>
+              </>
+            )}
             
         </div>
     </div>
