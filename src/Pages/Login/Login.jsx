@@ -1,5 +1,4 @@
 import {useState} from 'react'
-import "./Login.css"
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
@@ -31,20 +30,18 @@ const Login = () => {
         }
     }
   return ( 
-    <form className='container-login' onSubmit={(e)=>{e.preventDefault();handleEntrar()}}>
+    <form className='form-card' onSubmit={(e)=>{e.preventDefault();handleEntrar()}}>
         <h1>Login</h1>
-        <div className='container-input'>
-            <div className='container-email'>
-                <h2>Email: </h2>
-                <input type='email' value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder='Digite seu e-mail...' />
-            </div>
-            <div className='container-password'>
-                <h2>Senha:</h2>
-                <input type='password' value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='Digite sua senha...' />
-            </div>
+        <p className='subtitulo'>Entre para ver sua carteira</p>
+        <div className='campo'>
+            <label htmlFor='email'>Email</label>
+            <input id='email' type='email' value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder='Digite seu e-mail...' />
         </div>
-        
-        <button type='submit' className="btn btn-entrar">Entrar</button>
+        <div className='campo'>
+            <label htmlFor='senha'>Senha</label>
+            <input id='senha' type='password' value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='Digite sua senha...' />
+        </div>
+        <button type='submit' className='btn'>Entrar</button>
     </form>
   )
 }

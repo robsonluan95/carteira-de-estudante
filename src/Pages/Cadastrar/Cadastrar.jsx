@@ -1,5 +1,4 @@
 import {useState} from 'react'
-import "./Cadastrar.css"
 import {auth} from "../../FireBase/FireBase"
 import {createUserWithEmailAndPassword} from "firebase/auth"
 import {toast} from 'react-toastify'
@@ -31,19 +30,18 @@ const Cadastrar = () => {
     }
   }
   return (
-    <form className='container-cadastrar' onSubmit={(e)=>{e.preventDefault();handleCadastro()}}>
+    <form className='form-card' onSubmit={(e)=>{e.preventDefault();handleCadastro()}}>
       <h1>Cadastre-se</h1>
-        <div className='container-input'>
-            <div className='container-email'>
-                <h2>Email: </h2>
-                <input type='email' value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder='Digite seu e-mail...' />
-            </div>
-            <div className='container-password'>
-                <h2>Senha:</h2>
-                <input type='password' value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='Digite sua senha...' />
-            </div>
+        <p className='subtitulo'>Crie sua conta para gerar a carteira</p>
+        <div className='campo'>
+            <label htmlFor='email'>Email</label>
+            <input id='email' type='email' value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder='Digite seu e-mail...' />
         </div>
-        <button type='submit' className='btn btn-cadastrar'>Cadastrar</button>
+        <div className='campo'>
+            <label htmlFor='senha'>Senha</label>
+            <input id='senha' type='password' value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='Digite sua senha...' />
+        </div>
+                <button type='submit' className='btn'>Cadastrar</button>
     </form>
   )
 }

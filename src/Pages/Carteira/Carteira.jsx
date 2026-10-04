@@ -77,54 +77,57 @@ const Carteira = () => {
         }
     }
 
-    if (loading) return <div>Loading...</div>
+    if (loading) return <p className='carregando'>Carregando...</p>
     if (!user) return <Navigate to="/login" replace/>
 
   return (
-    <div>
-                <div>
-                    <h3>Nome Completo:</h3>
-                    <input placeholder='Nome Completo' value={nome} onChange={(e)=>{setNome(e.target.value)}} />
+    <form className='form-card form-card-largo' onSubmit={(e)=>{e.preventDefault();handleGerar()}}>
+            <h1>Dados da carteira</h1>
+            <p className='subtitulo'>Preencha seus dados para gerar a carteira</p>
+            <div className='form-grid'>
+                <div className='campo'>
+                    <label htmlFor='nome'>Nome Completo</label>
+                    <input id='nome' placeholder='Nome Completo' value={nome} onChange={(e)=>{setNome(e.target.value)}} />
                 </div>
-                <div>
-                    <h3>CPF:</h3>
-                    <input placeholder='Numero do CPF' inputMode='numeric' value={cpf} onChange={(e)=>{setCPF(e.target.value)}}/>
+                <div className='campo'>
+                    <label htmlFor='cpf'>CPF</label>
+                    <input id='cpf' placeholder='Numero do CPF' inputMode='numeric' value={cpf} onChange={(e)=>{setCPF(e.target.value)}} />
                 </div>
-                <div>
-                    <h3>RG:</h3>
-                    <input placeholder='Numero do RG' inputMode='numeric' value={rg} onChange={(e)=>{setRG(e.target.value)}} />
+                <div className='campo'>
+                    <label htmlFor='rg'>RG</label>
+                    <input id='rg' placeholder='Numero do RG' inputMode='numeric' value={rg} onChange={(e)=>{setRG(e.target.value)}} />
                 </div>
-                <div>
-                    <h3>Data de nascimento:</h3>
-                    <input type='date'  value={dataNascimento} onChange={(e)=>{setDataNascimento(e.target.value)}}/>
+                <div className='campo'>
+                    <label htmlFor='dataNascimento'>Data de nascimento</label>
+                    <input id='dataNascimento' type='date' value={dataNascimento} onChange={(e)=>{setDataNascimento(e.target.value)}} />
                 </div>
-                <div>
-                    <h3>Curso:</h3>
-                    <input placeholder='Nome do Curso'  value={curso} onChange={(e)=>{setCurso(e.target.value)}}/>
+                <div className='campo'>
+                    <label htmlFor='curso'>Curso</label>
+                    <input id='curso' placeholder='Nome do Curso' value={curso} onChange={(e)=>{setCurso(e.target.value)}} />
                 </div>
-                <div>
-                    <h3>Instituição:</h3>
-                    <input placeholder='Nome da Instituição' value={instituicao} onChange={(e)=>{setinstituicao(e.target.value)}} />
+                <div className='campo'>
+                    <label htmlFor='instituicao'>Instituição</label>
+                    <input id='instituicao' placeholder='Nome da Instituição' value={instituicao} onChange={(e)=>{setinstituicao(e.target.value)}} />
                 </div>
-                <div>
-                    <h3>Matricula:</h3>
-                    <input placeholder='Numero da Matricula' inputMode='numeric' value={matricula} onChange={(e)=>{setMatricula(e.target.value)}} />
+                <div className='campo'>
+                    <label htmlFor='matricula'>Matrícula</label>
+                    <input id='matricula' placeholder='Numero da Matricula' inputMode='numeric' value={matricula} onChange={(e)=>{setMatricula(e.target.value)}} />
                 </div>
-                <div>
-                    <h3>Nivel de Ensino:</h3>
-                    <input placeholder='Nivel de Ensino' value={nivelEnsino} onChange={(e)=>{setNivelEnsino(e.target.value)}} />
+                <div className='campo'>
+                    <label htmlFor='nivelEnsino'>Nível de Ensino</label>
+                    <input id='nivelEnsino' placeholder='Ex.: Superior' value={nivelEnsino} onChange={(e)=>{setNivelEnsino(e.target.value)}} />
                 </div>
-                <div>
-                    <h3>Nome da Cidade:</h3>
-                    <input placeholder='Nome da Cidade' value={cidade} onChange={(e)=>{setCidade(e.target.value)}}/>
+                <div className='campo'>
+                    <label htmlFor='cidade'>Cidade</label>
+                    <input id='cidade' placeholder='Nome da Cidade' value={cidade} onChange={(e)=>{setCidade(e.target.value)}} />
                 </div>
-                <div>
-                    <h3>UID:</h3>
-                    <input placeholder='UID'  value={user.uid} disabled />
+                <div className='campo'>
+                    <label htmlFor='uid'>UID</label>
+                    <input id='uid' value={user.uid} disabled />
                 </div>
-
-                <button onClick={()=>{handleGerar()}}>Gerar!</button>
-    </div>
+            </div>
+            <button type='submit' className='btn'>Gerar carteira</button>
+    </form>
   )
 }
 

@@ -24,10 +24,10 @@ const Header = () => {
     }
   return (
     <div className='container-header'>
-      <Link  className='link-home' to={"/"}><h2>Carteira de Estudante</h2></Link>
+      <Link  className='link-home' to={"/"}><span className='logo'>CE</span><h2>Carteira de Estudante</h2></Link>
         
         <div className='container-link'>
-            {user?(<button className='btn btn-sair' onClick={()=>handlesair()}>sair</button>):(<Link to={"/login"}>Login</Link>)}
+            {user?(<button className='btn btn-secundario' onClick={()=>handlesair()}>Sair</button>):(<Link to={"/login"}>Login</Link>)}
             {user?(<Link to={"/carteira"}>Carteira</Link>):(<Link to={"/cadastrar"}>Cadastrar</Link>)}
             
         </div>

@@ -1,6 +1,108 @@
 #root {
-  max-width: 1280px;
+  max-width: 1100px;
   margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+/* Cartão de formulário (login, cadastro e carteira) */
+.form-card {
+  max-width: 420px;
+  margin: 2rem auto;
   padding: 2rem;
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.form-card-largo {
+  max-width: 760px;
+}
+.form-card h1 {
+  margin: 0;
+  font-size: 1.6rem;
+  color: var(--cor-primaria-escura);
+}
+.form-card .subtitulo {
+  margin: -0.5rem 0 0.5rem;
+  color: var(--cor-texto-suave);
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  text-align: left;
+}
+.campo label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--cor-texto-suave);
+}
+.campo input {
+  height: 2.75rem;
+  padding: 0 0.85rem;
+  font-size: 1rem;
+  color: var(--cor-texto);
+  background: var(--cor-superficie);
+  border: 1px solid var(--cor-borda);
+  border-radius: 10px;
+  transition: border-color .2s, box-shadow .2s;
+}
+.campo input:focus {
+  outline: none;
+  border-color: var(--cor-primaria);
+  box-shadow: 0 0 0 3px rgba(55, 48, 163, 0.15);
+}
+.campo input:disabled {
+  background: var(--cor-fundo);
+  color: var(--cor-texto-suave);
+}
+
+.btn {
+  height: 2.75rem;
+  padding: 0 1.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--cor-primaria);
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background .2s, transform .1s;
+}
+.btn:hover {
+  background: var(--cor-primaria-escura);
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn-secundario {
+  color: var(--cor-primaria);
+  background: transparent;
+  border: 1px solid var(--cor-primaria);
+}
+.btn-secundario:hover {
+  color: #fff;
+}
+
+.carregando {
+  margin-top: 3rem;
   text-align: center;
+  color: var(--cor-texto-suave);
+}
+
+@media (max-width: 600px) {
+  .form-card {
+    padding: 1.5rem;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
 }
