@@ -1,13 +1,17 @@
-import React,{useState,useEffect,useContext} from 'react'
+import {useState,useEffect,useContext} from 'react'
+import { Navigate } from 'react-router-dom'
 import { UserContext } from '../../context/UserContext'
-import { auth,db} from '../../FireBase/FireBase'
-import { collection, addDoc,getDocs } from "firebase/firestore"; 
+import { db} from '../../FireBase/FireBase'
+import { collection, addDoc,getDocs,query,where,updateDoc } from "firebase/firestore"; 
 import { toast } from 'react-toastify';
+import { reduzirFoto } from '../../utils/foto';
 
 const Carteira = () => {
-    const {user,setUser}=useContext(UserContext)
+    const {user,loading}=useContext(UserContext)
     const userUID=user?user.uid:"";
-    const [dadoRepetido,setDadoRepetido]=useState("")
+    const [jaCadastrado,setJaCadastrado]=useState(false)
+    const [docRef,setDocRef]=useState(null)
+    const [foto,setFoto]=useState("")
 
     const [nome,setNome]=useState("")
     const [cpf,setCPF]=useState("")
@@ -18,73 +22,80 @@ const Carteira = () => {
     const [matricula,setMatricula]=useState("")
     const [nivelEnsino,setNivelEnsino]=useState("")
     const [cidade,setCidade]=useState("")
-    const [UID,setUID]=useState("")
 
 
     useEffect(()=>{
+        if (!userUID) return
         async function attdados(){
-            const querySnapshot =  await getDocs(collection(db,"dadosCarteira"));
-            querySnapshot.forEach((doc) => {
-                setDadoRepetido(doc.data().UID);
-            })
+            try{
+                const q=query(collection(db,"dadosCarteira"),where("UID","==",userUID))
+                const querySnapshot =  await getDocs(q);
+                setJaCadastrado(!querySnapshot.empty)
+                if (!querySnapshot.empty){
+                    setDocRef(querySnapshot.docs[0].ref)
+                    setFoto(querySnapshot.docs[0].data().foto||"")
+                }
+            }catch(error){
+                console.error(error)
+            }
         }
         attdados()
-        
-    },[])
+    },[userUID])
 
     
+    async function handleFoto(e){
+        const arquivo=e.target.files[0]
+        if (!arquivo) return
+        try{
+            setFoto(await reduzirFoto(arquivo))
+        }catch(error){
+            toast.error(error.message)
+        }
+        e.target.value=""
+    }
+
+    async function handleSalvarFoto(){
+        if (!foto){
+            toast.error('Escolha uma foto primeiro')
+            return
+        }
+        try{
+            await updateDoc(docRef,{foto})
+            toast.success('Foto atualizada com Sucesso')
+        }catch(error){
+            console.error(error)
+            toast.error(`Erro ao salvar a foto: ${error.message}`)
+        }
+    }
+
     async function handleGerar(){
         if (!nome || !cpf || !rg || !dataNascimento || !curso || !instituicao || !matricula || !nivelEnsino || !cidade ) {
-            toast.error('Por favor, preencha todos os campos', {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
+            toast.error('Por favor, preencha todos os campos');
             return;
         }
         
-        
-        if (userUID===dadoRepetido){ 
-            toast.error("Documento ja existente!", {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                });
+        if (jaCadastrado){ 
+            toast.error("Documento ja existente!");
             return
         }
     
-        await addDoc(collection(db,"dadosCarteira"),{
-            nome,
-            cpf,
-            rg,
-            dataNascimento,
-            curso,
-            instituicao,
-            matricula,
-            nivelEnsino,
-            cidade,
-            UID:userUID
-        }).then(()=>{
-            toast.success('Carteira cadastrada com Sucesso', {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
+        try{
+            const novoDoc=await addDoc(collection(db,"dadosCarteira"),{
+                nome,
+                cpf,
+                rg,
+                dataNascimento,
+                curso,
+                instituicao,
+                matricula,
+                nivelEnsino,
+                cidade,
+                foto,
+                UID:userUID
+            })
+            setDocRef(novoDoc)
+            toast.success('Carteira cadastrada com Sucesso');
+            setJaCadastrado(true)
             setNome("")
             setCPF("")
             setRG("")
@@ -94,73 +105,85 @@ const Carteira = () => {
             setMatricula("")
             setNivelEnsino("")
             setCidade("")
-        }).catch((error)=>{
-            toast.success(`${error}`, {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                });
-        })
+        }catch(error){
+            console.error(error)
+            toast.error(`Erro ao cadastrar carteira: ${error.message}`);
+        }
     }
 
-  return (
-    <div>
-        {user?(
-            
-            <div>
-                    
-                <div>
-                    <h3>Nome Completo:</h3>
-                    <input placeholder='Nome da Cidade' value={nome} onChange={(e)=>{setNome(e.target.value)}} />
-                </div>
-                <div>
-                    <h3>CPF:</h3>
-                    <input placeholder='Numero do CPF' type='number' value={cpf} onChange={(e)=>{setCPF(e.target.value)}}/>
-                </div>
-                <div>
-                    <h3>RG:</h3>
-                    <input placeholder='Numero do RG' type='number'value={rg} onChange={(e)=>{setRG(e.target.value)}} />
-                </div>
-                <div>
-                    <h3>Data de nascimeto:</h3>
-                    <input placeholder='Nome do Curso' type='date'  value={dataNascimento} onChange={(e)=>{setDataNascimento(e.target.value)}}/>
-                </div>
-                <div>
-                    <h3>Curso:</h3>
-                    <input placeholder='Nome do Curso'  value={curso} onChange={(e)=>{setCurso(e.target.value)}}/>
-                </div>
-                <div>
-                    <h3>Instituição:</h3>
-                    <input placeholder='Nome da Instituição' value={instituicao} onChange={(e)=>{setinstituicao(e.target.value)}} />
-                </div>
-                <div>
-                    <h3>Matricula:</h3>
-                    <input placeholder='Numero da Matricula' type='number' value={matricula} onChange={(e)=>{setMatricula(e.target.value)}} />
-                </div>
-                <div>
-                    <h3>Nivel de Ensino:</h3>
-                    <input placeholder='Nivel de Ensino:' value={nivelEnsino} onChange={(e)=>{setNivelEnsino(e.target.value)}} />
-                </div>
-                <div>
-                    <h3>Nome da Cidade:</h3>
-                    <input placeholder='Nome da Cidade' value={cidade} onChange={(e)=>{setCidade(e.target.value)}}/>
-                </div>
-                <div>
-                    <h3>UID:</h3>
-                    <input placeholder='UID'  value={user.uid} disabled />
-                </div>
+    if (loading) return <p className='carregando'>Carregando...</p>
+    if (!user) return <Navigate to="/login" replace/>
 
-                <button onClick={()=>{handleGerar()}}>Gerar!</button>
-             </div>
-        ):(<div>Loading...</div>)}
-        
-        
+    if (jaCadastrado) return (
+    <div className='form-card'>
+            <h1>Foto da carteira</h1>
+            <p className='subtitulo'>Sua carteira já foi gerada. Aqui você pode trocar a foto.</p>
+            <div className='campo-foto'>
+                <div className='preview-foto'>
+                    {foto?<img src={foto} alt='Foto do estudante'/>:<span>Sem foto</span>}
+                </div>
+                <label className='btn btn-secundario' htmlFor='foto'>Escolher foto</label>
+                <input id='foto' type='file' accept='image/*' onChange={handleFoto} hidden/>
+            </div>
+            <button type='button' className='btn' onClick={handleSalvarFoto}>Salvar foto</button>
     </div>
+    )
+
+  return (
+    <form className='form-card form-card-largo' onSubmit={(e)=>{e.preventDefault();handleGerar()}}>
+            <h1>Dados da carteira</h1>
+            <p className='subtitulo'>Preencha seus dados para gerar a carteira</p>
+            <div className='campo-foto'>
+                <div className='preview-foto'>
+                    {foto?<img src={foto} alt='Foto do estudante'/>:<span>Sem foto</span>}
+                </div>
+                <label className='btn btn-secundario' htmlFor='foto'>Escolher foto</label>
+                <input id='foto' type='file' accept='image/*' onChange={handleFoto} hidden/>
+            </div>
+            <div className='form-grid'>
+                <div className='campo'>
+                    <label htmlFor='nome'>Nome Completo</label>
+                    <input id='nome' placeholder='Nome Completo' value={nome} onChange={(e)=>{setNome(e.target.value)}} />
+                </div>
+                <div className='campo'>
+                    <label htmlFor='cpf'>CPF</label>
+                    <input id='cpf' placeholder='Numero do CPF' inputMode='numeric' value={cpf} onChange={(e)=>{setCPF(e.target.value)}} />
+                </div>
+                <div className='campo'>
+                    <label htmlFor='rg'>RG</label>
+                    <input id='rg' placeholder='Numero do RG' inputMode='numeric' value={rg} onChange={(e)=>{setRG(e.target.value)}} />
+                </div>
+                <div className='campo'>
+                    <label htmlFor='dataNascimento'>Data de nascimento</label>
+                    <input id='dataNascimento' type='date' value={dataNascimento} onChange={(e)=>{setDataNascimento(e.target.value)}} />
+                </div>
+                <div className='campo'>
+                    <label htmlFor='curso'>Curso</label>
+                    <input id='curso' placeholder='Nome do Curso' value={curso} onChange={(e)=>{setCurso(e.target.value)}} />
+                </div>
+                <div className='campo'>
+                    <label htmlFor='instituicao'>Instituição</label>
+                    <input id='instituicao' placeholder='Nome da Instituição' value={instituicao} onChange={(e)=>{setinstituicao(e.target.value)}} />
+                </div>
+                <div className='campo'>
+                    <label htmlFor='matricula'>Matrícula</label>
+                    <input id='matricula' placeholder='Numero da Matricula' inputMode='numeric' value={matricula} onChange={(e)=>{setMatricula(e.target.value)}} />
+                </div>
+                <div className='campo'>
+                    <label htmlFor='nivelEnsino'>Nível de Ensino</label>
+                    <input id='nivelEnsino' placeholder='Ex.: Superior' value={nivelEnsino} onChange={(e)=>{setNivelEnsino(e.target.value)}} />
+                </div>
+                <div className='campo'>
+                    <label htmlFor='cidade'>Cidade</label>
+                    <input id='cidade' placeholder='Nome da Cidade' value={cidade} onChange={(e)=>{setCidade(e.target.value)}} />
+                </div>
+                <div className='campo'>
+                    <label htmlFor='uid'>UID</label>
+                    <input id='uid' value={user.uid} disabled />
+                </div>
+            </div>
+            <button type='submit' className='btn'>Gerar carteira</button>
+    </form>
   )
 }
 

@@ -1,107 +1,48 @@
-import React,{useContext,useEffect,useState} from 'react'
-import "./Login.css"
+import {useState} from 'react'
 import { toast } from 'react-toastify';
-import { UserContext } from '../../context/UserContext'
 import { useNavigate } from 'react-router-dom';
-import { onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../FireBase/FireBase';
 
 const Login = () => {
-    const {user,setUser}=useContext(UserContext)
-
     const [email,setEmail]=useState("")
     const [password,setPassword]=useState("")
 
     const navigator= useNavigate()
     
     async function handleEntrar(){
-        await signInWithEmailAndPassword(auth,email,password)
-        .then((value)=>{
-            console.log(value.user)
-            toast.success('Usuário conctado', {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
-            setUser(true)
+        try{
+            // o usuário do contexto é atualizado pelo onAuthStateChanged
+            await signInWithEmailAndPassword(auth,email,password)
+            toast.success('Usuário conectado')
             navigator("/")
-        })
-        .catch((error)=>{
-            console.log(error)
+        }catch(error){
+            console.error(error)
             if (error.code==="auth/invalid-email"){
-                toast.warn(`Email invalido!`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                });
-                setUser(false)
-            }else if (error.code==="auth/invalid-login-credentials"){
-                toast.warn(`Senha errada!`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                });
-                setUser(false)
+                toast.warn(`Email invalido!`)
+            }else if (error.code==="auth/invalid-login-credentials"||error.code==="auth/invalid-credential"||error.code==="auth/wrong-password"||error.code==="auth/user-not-found"){
+                toast.warn(`Email ou senha incorretos!`)
             }else if (error.code==="auth/missing-password"){
-                toast.warn(`Esqueceu de inserir a senha!`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                });
-                setUser(false)
+                toast.warn(`Esqueceu de inserir a senha!`)
             }else{
-                toast.warn(`Error`, {
-                    position: "top-center",
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "dark",
-                });
-                setUser(false)
+                toast.warn(`Erro ao entrar!`)
             }
-            
-        })
-        
+        }
     }
   return ( 
-    <div className='container-login'>
+    <form className='form-card' onSubmit={(e)=>{e.preventDefault();handleEntrar()}}>
         <h1>Login</h1>
-        <div className='container-input'>
-            <div className='container-email'>
-                <h2>Email: </h2>
-                <input type='email' value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder='Digite seu e-mail...' />
-            </div>
-            <div className='container-password'>
-                <h2>Senha:</h2>
-                <input type='password' value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='Digite sua senha...' />
-            </div>
+        <p className='subtitulo'>Entre para ver sua carteira</p>
+        <div className='campo'>
+            <label htmlFor='email'>Email</label>
+            <input id='email' type='email' value={email} onChange={(e)=>setEmail(e.target.value)}  placeholder='Digite seu e-mail...' />
         </div>
-        
-        <button className="btn btn-entrar" onClick={()=>handleEntrar()}>Entrar</button>
-    </div>
+        <div className='campo'>
+            <label htmlFor='senha'>Senha</label>
+            <input id='senha' type='password' value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='Digite sua senha...' />
+        </div>
+        <button type='submit' className='btn'>Entrar</button>
+    </form>
   )
 }
 

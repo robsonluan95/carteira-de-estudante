@@ -1,18 +1,15 @@
-import { useState } from 'react'
 import Rotas from './router'
 
-import { ToastContainer, toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 
 import 'react-toastify/dist/ReactToastify.css';
 
 import './App.css'
 
 function App() {
-
-
   return (
     <div>
-      <ToastContainer autoClose={2000}/>
+      <ToastContainer position="top-center" autoClose={2000} theme="dark"/>
         <Rotas/>
     </div>
   )

@@ -1,82 +1,129 @@
-.container-card{
-    margin: 10px auto;
-    width: 90%;
-    min-height: 60%;
-    flex-direction: column;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(7, 167, 7, 0.726);
-    flex-wrap: wrap;
-    border-radius: 20px;
-    color:white;
-    
+.carteira {
+  position: relative;
+  max-width: 640px;
+  margin: 2rem auto;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(135deg, var(--cor-primaria) 0%, #4338ca 55%, var(--cor-destaque) 130%);
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(49, 46, 129, 0.25);
 }
-.container-DNR{
-    display: flex;
-    flex-direction: inline;
-    width: 100%;
-    justify-content: space-around;
-    align-items: center;
+.carteira-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem 1.5rem 1rem;
 }
-.container-DNR img{
-    width:10vw ; height :auto;
+.carteira-rotulo {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.8;
 }
-.container-dados{
-    width: 100%;
-    flex-direction: inline;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: rgb(151, 156, 151);
-    flex-wrap: wrap;
-    color:#000;
+.carteira-topo h1 {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.2;
 }
-.container-dados h1{
-    font-size: 1.2em;
+.carteira-data {
+  padding: 0.3rem 0.7rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
 }
-.container-foto{
-    border: 3px #000 solid;
-    width: 15vw;
-    height: 20vh;
-    min-width: 60px;
-    min-height:200px;
-    background-color: white;
-    margin-right: 10px;
+.carteira-corpo {
+  display: flex;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+  color: var(--cor-texto);
+  background: var(--cor-superficie);
 }
-.container-estudante{
-    width:40%;
+.carteira-foto {
+  position: relative;
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 120px;
+  height: 150px;
+  background: var(--cor-fundo);
+  border: 2px solid var(--cor-borda);
+  border-radius: 12px;
 }
-.container-escola{
-    width:30%;
+.carteira-foto > img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 10px;
 }
-.container-codigos{
-    display: flex;
-    width: 100%;
-    
-    align-items: center;
-    justify-content: space-around;
-    margin-top: 10px;
+.carteira-foto > svg {
+  width: 64px;
+  height: 64px;
+  fill: #cbd5e1;
 }
-.container-codigos img{
-    width:10vw;
+.carteira-dados {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem 1rem;
+  margin: 0;
 }
-.container-codigo-uso {
-    display: flex;
-    flex-direction: column;
+.dado-largo {
+  grid-column: 1 / -1;
+}
+.dado dt {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--cor-texto-suave);
+}
+.dado dd {
+  margin: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
 
+.carteira-logo {
+  width: 90px;
+  height: auto;
+  padding: 0.4rem;
+  background: #fff;
+  border-radius: 10px;
 }
-.Ano{
-  background: -webkit-linear-gradient(#9e1212, #610a64);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  font-size: 38px;
+.carteira-codigos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+}
+.carteira-qr {
+  width: 72px;
+  height: 72px;
+  padding: 4px;
+  background: #fff;
+  border-radius: 8px;
+}
+.carteira-codigo-uso {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+}
+.carteira-codigo-uso strong {
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
 }
 
-@media only screen and (max-width: 600px) {
-    .container-card{
-        width: 100vh;
-     
-    }
-  
+@media (max-width: 600px) {
+  .carteira-corpo {
+    flex-direction: column;
+    align-items: center;
   }
+  .carteira-dados {
+    width: 100%;
+  }
+}
