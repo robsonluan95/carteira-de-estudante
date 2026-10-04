@@ -1,98 +1,37 @@
-import React, { useState,useContext } from 'react'
+import {useState} from 'react'
 import "./Cadastrar.css"
-import {db , auth} from "../../FireBase/FireBase"
+import {auth} from "../../FireBase/FireBase"
 import {createUserWithEmailAndPassword} from "firebase/auth"
 import {toast} from 'react-toastify'
-import { UserContext } from '../../context/UserContext.jsx'
 import { useNavigate } from 'react-router-dom'
 
 const Cadastrar = () => {
-  const {user,setUser}=useContext(UserContext)
   const [email,setEmail]=useState("")
   const [password,setPassword]=useState("")
   let navigate=useNavigate()
-  console.log(email)
   async function handleCadastro(){
-    await createUserWithEmailAndPassword(auth,email,password )
-    .then(()=>{
-      toast.success('Usuário Cadastrado com Sucesso', {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "dark",
-        });
-        setUser(true)
-        navigate("/carteira")
-    }).catch((error)=>{
+    try{
+      // o usuário do contexto é atualizado pelo onAuthStateChanged
+      await createUserWithEmailAndPassword(auth,email,password)
+      toast.success('Usuário Cadastrado com Sucesso')
+      navigate("/carteira")
+    }catch(error){
+      console.error(error)
       if(error.code==="auth/invalid-email"){
-        toast.warn('Email invalido', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
-          setUser(false)
+        toast.warn('Email invalido')
       }else if (error.code==="auth/email-already-in-use"){
-        toast.warn('Email em uso', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
-          setUser(false)
+        toast.warn('Email em uso')
       }else if (error.code==="auth/missing-password"){
-        toast.warn('Senha errada', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
-          setUser(false)
+        toast.warn('Digite uma senha')
       }else if (error.code==="auth/weak-password"){
-        toast.warn('Senha muito curta', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
-          setUser(false)
+        toast.warn('Senha muito curta (mínimo 6 caracteres)')
       }else{
-        toast.warn('Erro!', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "dark",
-          });
-          setUser(false)
+        toast.warn('Erro!')
       }
-    })
+    }
   }
   return (
-    <div className='container-cadastrar'>
+    <form className='container-cadastrar' onSubmit={(e)=>{e.preventDefault();handleCadastro()}}>
       <h1>Cadastre-se</h1>
         <div className='container-input'>
             <div className='container-email'>
@@ -104,8 +43,8 @@ const Cadastrar = () => {
                 <input type='password' value={password} onChange={(e)=>setPassword(e.target.value)} placeholder='Digite sua senha...' />
             </div>
         </div>
-        <button className='btn btn-cadastrar' onClick={()=>handleCadastro()}>Cadastrar</button>
-    </div>
+        <button type='submit' className='btn btn-cadastrar'>Cadastrar</button>
+    </form>
   )
 }
 

@@ -1,13 +1,14 @@
-import React,{useState,useEffect,useContext} from 'react'
+import {useState,useEffect,useContext} from 'react'
+import { Navigate } from 'react-router-dom'
 import { UserContext } from '../../context/UserContext'
-import { auth,db} from '../../FireBase/FireBase'
-import { collection, addDoc,getDocs } from "firebase/firestore"; 
+import { db} from '../../FireBase/FireBase'
+import { collection, addDoc,getDocs,query,where } from "firebase/firestore"; 
 import { toast } from 'react-toastify';
 
 const Carteira = () => {
-    const {user,setUser}=useContext(UserContext)
+    const {user,loading}=useContext(UserContext)
     const userUID=user?user.uid:"";
-    const [dadoRepetido,setDadoRepetido]=useState("")
+    const [jaCadastrado,setJaCadastrado]=useState(false)
 
     const [nome,setNome]=useState("")
     const [cpf,setCPF]=useState("")
@@ -18,73 +19,49 @@ const Carteira = () => {
     const [matricula,setMatricula]=useState("")
     const [nivelEnsino,setNivelEnsino]=useState("")
     const [cidade,setCidade]=useState("")
-    const [UID,setUID]=useState("")
 
 
     useEffect(()=>{
+        if (!userUID) return
         async function attdados(){
-            const querySnapshot =  await getDocs(collection(db,"dadosCarteira"));
-            querySnapshot.forEach((doc) => {
-                setDadoRepetido(doc.data().UID);
-            })
+            try{
+                const q=query(collection(db,"dadosCarteira"),where("UID","==",userUID))
+                const querySnapshot =  await getDocs(q);
+                setJaCadastrado(!querySnapshot.empty)
+            }catch(error){
+                console.error(error)
+            }
         }
         attdados()
-        
-    },[])
+    },[userUID])
 
     
     async function handleGerar(){
         if (!nome || !cpf || !rg || !dataNascimento || !curso || !instituicao || !matricula || !nivelEnsino || !cidade ) {
-            toast.error('Por favor, preencha todos os campos', {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
+            toast.error('Por favor, preencha todos os campos');
             return;
         }
         
-        
-        if (userUID===dadoRepetido){ 
-            toast.error("Documento ja existente!", {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                });
+        if (jaCadastrado){ 
+            toast.error("Documento ja existente!");
             return
         }
     
-        await addDoc(collection(db,"dadosCarteira"),{
-            nome,
-            cpf,
-            rg,
-            dataNascimento,
-            curso,
-            instituicao,
-            matricula,
-            nivelEnsino,
-            cidade,
-            UID:userUID
-        }).then(()=>{
-            toast.success('Carteira cadastrada com Sucesso', {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-            });
+        try{
+            await addDoc(collection(db,"dadosCarteira"),{
+                nome,
+                cpf,
+                rg,
+                dataNascimento,
+                curso,
+                instituicao,
+                matricula,
+                nivelEnsino,
+                cidade,
+                UID:userUID
+            })
+            toast.success('Carteira cadastrada com Sucesso');
+            setJaCadastrado(true)
             setNome("")
             setCPF("")
             setRG("")
@@ -94,41 +71,32 @@ const Carteira = () => {
             setMatricula("")
             setNivelEnsino("")
             setCidade("")
-        }).catch((error)=>{
-            toast.success(`${error}`, {
-                position: "top-center",
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "dark",
-                });
-        })
+        }catch(error){
+            console.error(error)
+            toast.error(`Erro ao cadastrar carteira: ${error.message}`);
+        }
     }
+
+    if (loading) return <div>Loading...</div>
+    if (!user) return <Navigate to="/login" replace/>
 
   return (
     <div>
-        {user?(
-            
-            <div>
-                    
                 <div>
                     <h3>Nome Completo:</h3>
-                    <input placeholder='Nome da Cidade' value={nome} onChange={(e)=>{setNome(e.target.value)}} />
+                    <input placeholder='Nome Completo' value={nome} onChange={(e)=>{setNome(e.target.value)}} />
                 </div>
                 <div>
                     <h3>CPF:</h3>
-                    <input placeholder='Numero do CPF' type='number' value={cpf} onChange={(e)=>{setCPF(e.target.value)}}/>
+                    <input placeholder='Numero do CPF' inputMode='numeric' value={cpf} onChange={(e)=>{setCPF(e.target.value)}}/>
                 </div>
                 <div>
                     <h3>RG:</h3>
-                    <input placeholder='Numero do RG' type='number'value={rg} onChange={(e)=>{setRG(e.target.value)}} />
+                    <input placeholder='Numero do RG' inputMode='numeric' value={rg} onChange={(e)=>{setRG(e.target.value)}} />
                 </div>
                 <div>
-                    <h3>Data de nascimeto:</h3>
-                    <input placeholder='Nome do Curso' type='date'  value={dataNascimento} onChange={(e)=>{setDataNascimento(e.target.value)}}/>
+                    <h3>Data de nascimento:</h3>
+                    <input type='date'  value={dataNascimento} onChange={(e)=>{setDataNascimento(e.target.value)}}/>
                 </div>
                 <div>
                     <h3>Curso:</h3>
@@ -140,11 +108,11 @@ const Carteira = () => {
                 </div>
                 <div>
                     <h3>Matricula:</h3>
-                    <input placeholder='Numero da Matricula' type='number' value={matricula} onChange={(e)=>{setMatricula(e.target.value)}} />
+                    <input placeholder='Numero da Matricula' inputMode='numeric' value={matricula} onChange={(e)=>{setMatricula(e.target.value)}} />
                 </div>
                 <div>
                     <h3>Nivel de Ensino:</h3>
-                    <input placeholder='Nivel de Ensino:' value={nivelEnsino} onChange={(e)=>{setNivelEnsino(e.target.value)}} />
+                    <input placeholder='Nivel de Ensino' value={nivelEnsino} onChange={(e)=>{setNivelEnsino(e.target.value)}} />
                 </div>
                 <div>
                     <h3>Nome da Cidade:</h3>
@@ -156,10 +124,6 @@ const Carteira = () => {
                 </div>
 
                 <button onClick={()=>{handleGerar()}}>Gerar!</button>
-             </div>
-        ):(<div>Loading...</div>)}
-        
-        
     </div>
   )
 }
