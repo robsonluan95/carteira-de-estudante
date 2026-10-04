@@ -101,7 +101,7 @@
   display: grid;
   place-items: center;
   width: 96px;
-  height: 120px;
+  height: 96px;
   overflow: hidden;
   font-size: 0.8rem;
   color: var(--cor-texto-suave);
