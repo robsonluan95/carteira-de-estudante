@@ -56,10 +56,10 @@ const Home = () => {
     <div className='carteira'>
       <div className='carteira-topo'>
         <div>
-          <span className='carteira-rotulo'>Carteira de Estudante</span>
-          <h1>{dadosUser.instituicao||"Instituição de ensino"}</h1>
+          <h1>DNE</h1>
+          <span className='carteira-rotulo'>Documento Nacional do Estudante</span>
         </div>
-        <span className='carteira-data'>{new Date().toLocaleDateString('pt-BR')}</span>
+        <img className='carteira-logo' alt='MEC' src='https://www.ufpb.br/cpa/contents/noticias/a-cpa-comissao-propria-de-avaliacao-informa-que-ja-enviou-seu-relatorio-de-gestao-do-ano-de-2017-a-cpme/mec.png/@@images/bd00b145-32db-4493-8b65-fa13595b92e4.png'/>
       </div>
 
       <div className='carteira-corpo'>
@@ -75,10 +75,19 @@ const Home = () => {
           <div className='dado'><dt>Matrícula</dt><dd>{dadosUser.matricula||"-"}</dd></div>
           <div className='dado dado-largo'><dt>Curso</dt><dd>{dadosUser.curso||"-"}</dd></div>
           <div className='dado'><dt>Nível de ensino</dt><dd>{dadosUser.nivelEnsino||"-"}</dd></div>
+          <div className='dado'><dt>Instituição</dt><dd>{dadosUser.instituicao||"-"}</dd></div>
           <div className='dado'><dt>Cidade</dt><dd>{dadosUser.cidade||"-"}</dd></div>
         </dl>
       </div>
 
+      <div className='carteira-codigos'>
+        <img className='carteira-qr' alt='QR Code' src='https://png.pngtree.com/png-clipart/20220605/original/pngtree-black-qr-code-for-web-png-image_7964376.png'/>
+        <div className='carteira-codigo-uso'>
+          <span>Código de uso:</span>
+          <strong>8000551654896</strong>
+        </div>
+        <span className='carteira-data'>{new Date().toLocaleDateString('pt-BR')}</span>
+      </div>
     </div>
   )
 }
